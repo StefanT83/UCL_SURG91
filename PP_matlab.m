@@ -144,7 +144,6 @@ legend([h1 h2 h3 h4]);
 ylim([0 .42]);
 
 
-
 %% section "\chi^2 distribution"
 x = linspace(-5,5,1e2); %choose
 
