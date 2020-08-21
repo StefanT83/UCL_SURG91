@@ -111,7 +111,7 @@ plot(x,y); grid on;
 set(gca,'xdir','reverse'); %alternatively use GUI: right click on the axes of the figure> Open Property Inspector > Rulers > XDir > reverse
 xlabel('Temperature x [^oC]');
 ylabel("P(x)");
-title("PDF");
+title("PDF: Normal distribution");
 axis tight; 
 
 %% slide "Normal (Gaussian) distribution"
