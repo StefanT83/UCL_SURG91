@@ -1,21 +1,22 @@
-%% recorded data
-time        = 0:23; %24-hour clock
+%% load recorded data
+time        = 0:23; %[hour] 24-hour clock
 temperature = [36 35.8 36.2 35.5 35.8 35.3 35.5 34.2 35.7 36.8 36.1 35.9 ...
-               34.1 37.6 37.7 35 34.2 35.5 36.8 35.1 34.9 35.6 36.5 37.1]; %[degree Celsius] 
+               34.1 37.6 37.7 35 34.2 35.5 36.8 35.1 34.9 35.6 36.5 37.1]; %[degree Celsius] day1
 
 %% section "A plot and a table"
 figure;
 h1 = plot(time,temperature,'bo-'); hold on;
 h2 = plot([0 23],38*[1 1],'r--', 'displayname','high temperature');
-xlabel('Time')
+xlabel('Time [hour]')
 ylabel('Temperature [^oC]')
 grid on;
 ylim([34 39]);
-legend(h2);
+legend(h2, 'location','northeast');
 
-%% section "Maximum and minimum"
+%% section "Maximum, minimum and range"
 max(temperature)
 min(temperature)
+range(temperature)
 
 %% section "Mean, median, mode"
 mean(temperature)
@@ -23,13 +24,13 @@ sort(temperature)
 median(temperature)
 mode(temperature)
 
-%% section "Mean, median, mode"
+%% section "Mean, median, mode: visualization"
 figure;
 h1 = plot(time,temperature,'bo-', 'displayname',''); hold on;
 h2 = plot([0 23],mean(temperature)*[1 1],'k-', 'linewidth',2, 'displayname','mean');
 h3 = plot([0 23],median(temperature)*[1 1],'r-', 'linewidth',2, 'displayname','median');
 h4 = plot([0 23],mode(temperature)*[1 1],'g-', 'linewidth',2, 'displayname','mode');
-xlabel('Time');
+xlabel('Time [hour]');
 ylabel('Temperature [^oC]');
 grid on;
 ylim([34 39]);
@@ -51,7 +52,7 @@ h1 = plot(time,temperature,'bo-', 'displayname','data x'); hold on;
 h2 = plot([0 23],mean(temperature)*[1 1],'k-', 'linewidth',2, 'displayname',['mean \mu=',num2str(mean(temperature),"%.1f")]);
 h3 = plot([0 23],mean(temperature)+std(temperature)*[1 1],'k--', 'linewidth',2, 'displayname',['\mu+\sigma=',num2str(mean(temperature)+std(temperature),"%.1f")]);
 h4 = plot([0 23],mean(temperature)-std(temperature)*[1 1],'--', 'color',.7*[1 1 1], 'linewidth',2, 'displayname',['\mu-\sigma=',num2str(mean(temperature)-std(temperature),"%.1f")]);
-xlabel('Time');
+xlabel('Time [hour]');
 ylabel('Temperature [^oC]');
 grid on;
 ylim([34 39]);
@@ -67,16 +68,18 @@ h1 = plot(time,y,'bo-', 'displayname','data y'); hold on;
 h2 = plot([0 23],mean(y)*[1 1],'k-', 'linewidth',2, 'displayname',['mean \mu=',num2str(mean(y),"%.1f")]);
 h3 = plot([0 23],mean(y)+std(y)*[1 1],'k--', 'linewidth',2, 'displayname',['\mu+\sigma_y=',num2str(mean(y)+std(y),"%.1f")]);
 h4 = plot([0 23],mean(y)-std(y)*[1 1],'--', 'color',.7*[1 1 1], 'linewidth',2, 'displayname',['\mu-\sigma_y=',num2str(mean(y)-std(y),"%.1f")]);
-xlabel('Time');
+xlabel('Time [hour]');
 ylabel('Temperature [^oC]');
 grid on;
 ylim([34 39]);
 legend([h1 h2 h3 h4]);
 
 %% section "The histogram"
+x = temperature;
+
 figure;
 h1 = plot(time,temperature,'bo-', 'displayname','data x'); hold on;
-xlabel('Time');
+xlabel('Time [hour]');
 ylabel('Temperature [^oC]');
 grid on;
 ylim([34 39]);
@@ -144,6 +147,7 @@ legend([h1 h2 h3 h4]);
 ylim([0 .42]);
 
 
+
 %% section "\chi^2 distribution"
 x = linspace(-5,5,1e2); %choose
 
@@ -168,10 +172,6 @@ title("Probability distributions (PDFs)");
 legend('show');
 
 
-
-
-
-
 %% section "Correlation"
 x1 = temperature; %[degree Celsius]
 
@@ -181,7 +181,7 @@ x2 = x1 + randn(size(x1)); %[degree Celsius]
 figure;
 h1 = plot(time,x1,'bo-', 'linewidth',2, 'displayname','day1: data x_1'); hold on;
 h2 = plot(time,x2,'mo-', 'linewidth',2, 'displayname','day2: data x_2');
-xlabel('Time');
+xlabel('Time [hour]');
 ylabel('Temperature [^oC]');
 grid on;
 ylim([34 39]);
@@ -194,6 +194,9 @@ ylabel('x_2 [^oC]');
 axis equal; 
 xlim([34 39]);
 ylim([34 39]);
+
+%% slide "Simple linear regression"
+%WIP
 
 %% slide "Time series"
 %%%% histogram corresponding to gamma=2
