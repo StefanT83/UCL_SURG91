@@ -115,13 +115,25 @@ title("PDF: Normal distribution");
 axis tight; 
 
 %% slide "Normal (Gaussian) distribution"
+x = linspace(-5,5,1e2);
+mu=0; %choose
+sigma=1; %choose
+
 figure;
-mu=0;
-sigma=1;
-plot(x,normpdf(x,mu,sigma), 'linewidth',2, 'displayname',['Normal (Gaussian),\newline{} \mu=',num2str(mu,"%.1f"),' (mean),\newline{} \sigma=',num2str(sigma,"%.1f"), ' (std dev)']); hold on;
+
+%define display name
+dispName = []; %ini
+if (isequal(mu,0) && isequal(sigma,1)) 
+    dispName = ['Standard normal (Gaussian)'];
+else
+    dispName = ['Normal (Gaussian)']; 
+end
+dispName = [dispName, ',\newline{} \mu=',num2str(mu,"%.1f"),' (mean),\newline{} \sigma=',num2str(sigma,"%.1f"), ' (std dev)']
+
+plot(x,normpdf(x,mu,sigma), 'linewidth',2, 'displayname',dispName); hold on;
 grid on;
 xlabel('x'); ylabel('P(x)');
-%title("Normal (Gaussian) distribution");
+title("PDF");
 legend('show', 'location','northwest');
 
 %% slide "Student's t-distribution"
@@ -148,7 +160,7 @@ ylim([0 .42]);
 
 
 
-%% section "\chi^2 distribution"
+%% slide "\chi^2 distribution"
 x = linspace(-5,5,1e2); %choose
 
 mu = 0; %mean
@@ -172,7 +184,7 @@ title("Probability distributions (PDFs)");
 legend('show');
 
 
-%% section "Correlation"
+%% slide "Correlation"
 x1 = temperature; %[degree Celsius]
 
 rng(22); %fix random seed for repeatability purpose 
@@ -196,7 +208,34 @@ xlim([34 39]);
 ylim([34 39]);
 
 %% slide "Simple linear regression"
-%WIP
+
+%%%% Least squares problem: X2 = XX1*theta, where XX1 is a matrix and X2 a vector of lumped measurements; theta=[b;a] is the vector of parameters defining the simple linear regression line x2=a*x1+b; a is the slope and b is the intercept 
+X2  = []; %ini
+XX1 = []; %ini
+
+for idx=1:length(x1)
+    X2  = [X2; ...
+           x2(idx)];
+    XX1 = [XX1; ...
+           x1(idx) 1];
+end
+
+theta = (transpose(XX1)*XX1)\(transpose(XX1)*X2)
+a = theta(1); %slope 
+b = theta(2); %intercept
+
+figure;
+plot(x1(1:end),x2(1:end),'bo', 'linewidth',2, 'displayname','(x_1,x_2) exp data'); hold on;  
+v = [min(x1) max(x1)];
+plot(v,a*v+b,'b-', 'linewidth',2, 'displayname',''); %regression line
+grid on;
+xlabel('x_1 [^oC]');
+ylabel('x_2 [^oC]');
+axis equal; 
+xlim([33 39]);
+ylim([33 39]);
+
+%wip: CI
 
 %% slide "Time series"
 %%%% histogram corresponding to gamma=2
