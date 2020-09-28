@@ -114,27 +114,31 @@ ylabel("P(x)");
 title("PDF: Normal distribution");
 axis tight; 
 
-%% slide "Normal (Gaussian) distribution"
+%% slide "Normal distribution"
 x = linspace(-5,5,1e2);
 mu=0; %choose
-sigma=1; %choose
+sigma=0.6; %choose
+
+%def
+normpdf1 = @(x,mu,sigma)normpdf(x,mu,sigma)/sigma; % there seems to be a bug in matlab's normpdf as it does not scale right this distribution 
 
 figure;
 
 %define display name
 dispName = []; %ini
 if (isequal(mu,0) && isequal(sigma,1)) 
-    dispName = ['Standard normal (Gaussian)'];
+    dispName = ['Standard normal'];
 else
-    dispName = ['Normal (Gaussian)']; 
+    dispName = ['Normal']; 
 end
 dispName = [dispName, ',\newline{} \mu=',num2str(mu,"%.1f"),' (mean),\newline{} \sigma=',num2str(sigma,"%.1f"), ' (std dev)']
 
-plot(x,normpdf(x,mu,sigma), 'linewidth',2, 'displayname',dispName); hold on;
+plot(x,normpdf1(x,mu,sigma), 'linewidth',2, 'displayname',dispName); hold on;
 grid on;
 xlabel('x'); ylabel('P(x)');
 title("PDF");
 legend('show', 'location','northwest');
+ylim([0 .4])
 
 %% slide "Student's t-distribution"
 figure;
@@ -148,10 +152,10 @@ ylim([0 .42]);
 
 
 figure;
-nu_dof=1; h1 = plot(x,tpdf(x,nu_dof), 'linewidth',2, 'displayname',['Student`s t, \nu=',num2str(nu_dof,"%d"),' (dof)']); hold on;
-nu_dof=3; h2 = plot(x,tpdf(x,nu_dof), 'linewidth',2, 'displayname',['Student`s t, \nu=',num2str(nu_dof,"%d"),' (dof)']); hold on;
+%nu_dof=1; h1 = plot(x,tpdf(x,nu_dof), 'linewidth',2, 'displayname',['Student`s t, \nu=',num2str(nu_dof,"%d"),' (dof)']); hold on;
+%nu_dof=3; h2 = plot(x,tpdf(x,nu_dof), 'linewidth',2, 'displayname',['Student`s t, \nu=',num2str(nu_dof,"%d"),' (dof)']); hold on;
 nu_dof=5; h3 = plot(x,tpdf(x,nu_dof), 'linewidth',2, 'displayname',['Student`s t, \nu=',num2str(nu_dof,"%d"),' (dof)']); hold on;
-          h4 = plot(x,normpdf(x,0.,1.),'k-', 'linewidth',2, 'displayname',['Normal (Gaussian),\newline{} \mu=',num2str(mu,"%.1f"),' (mean),\newline{} \sigma=',num2str(sigma,"%.1f"), ' (std dev)']); hold on;
+%          h4 = plot(x,normpdf1(x,0.,1.),'k-', 'linewidth',2, 'displayname',['Normal,\newline{} \mu=',num2str(mu,"%.1f"),' (mean),\newline{} \sigma=',num2str(sigma,"%.1f"), ' (std dev)']); hold on;
 grid on;
 xlabel('x'); ylabel('P(x)');
 %title("Probability distributions (PDFs)");
@@ -161,11 +165,11 @@ ylim([0 .42]);
 
 
 %% slide "\chi^2 distribution"
-x = linspace(-5,5,1e2); %choose
+x = linspace(-5,5,1e3); %choose
 
 mu = 0; %mean
 sigma = 1;
-y_npdf = normpdf(x,mu,sigma);
+y_npdf = normpdf1(x,mu,sigma);
 
 nu_dof = 3; %choose
 y_tpdf = tpdf(x,nu_dof);
@@ -175,14 +179,50 @@ y_chiSqpdf = chi2pdf(x,k_dof);
 
 %%%% compared study of multiple distributions
 figure;
-plot(x,y_npdf, 'linewidth',2, 'displayname',['Normal (Gaussian),\newline{} \mu=',num2str(mu,"%.1f"),' (mean),\newline{} \sigma=',num2str(sigma,"%.1f"), ' (std dev)']); hold on;
-plot(x,y_tpdf, 'linewidth',2, 'displayname',['Student t, \nu=',num2str(nu_dof,"%d"),' (dof)']); hold on;
+plot(x,y_npdf, 'linewidth',2, 'displayname',['Standard Normal,\newline{} \mu=',num2str(mu,"%.1f"),' (mean),\newline{} \sigma=',num2str(sigma,"%.1f"), ' (std dev)']); hold on;
+plot(x,y_tpdf, 'linewidth',2, 'displayname',['Student''s t, \nu=',num2str(nu_dof,"%d"),' (dof)']); hold on;
 plot(x,y_chiSqpdf, 'linewidth',2, 'displayname',['\chi^2, k=',num2str(k_dof,"%.2f"),' (dof)']); hold on;
 grid on;
 xlabel('x'); ylabel('P(x)');
 title("Probability distributions (PDFs)");
 legend('show');
+axis([min(x) max(x) 0 .45]);
 
+
+%%%% study parameter variation: k (dof)
+figure;
+k_dof = 2.1; y_chiSqpdf = chi2pdf(x,k_dof);
+plot(x,y_chiSqpdf, 'linewidth',2, 'displayname',['\chi^2, k=',num2str(k_dof,"%.2f"),' (dof)']); hold on;
+%  k_dof = 2.3; y_chiSqpdf = chi2pdf(x,k_dof);
+%  plot(x,y_chiSqpdf, 'linewidth',2, 'displayname',['\chi^2, k=',num2str(k_dof,"%.2f"),' (dof)']); hold on;
+% k_dof = 2.7; y_chiSqpdf = chi2pdf(x,k_dof);
+% plot(x,y_chiSqpdf, 'linewidth',2, 'displayname',['\chi^2, k=',num2str(k_dof,"%.2f"),' (dof)']); hold on;
+title("Probability distributions (PDFs)");
+grid on;
+xlabel('x'); ylabel('P(x)');
+legend('show');
+axis([min(x) max(x) 0 .45]);
+
+%% F distribution
+x = linspace(1e-7,5,1e3); %choose
+
+figure;
+% k1_dof = 2.1; k2_dof = k1_dof; y_Fpdf = fpdf(x,k1_dof,k2_dof);
+% plot(x,y_Fpdf, 'linewidth',2, 'displayname',['F, k_1=k_2=',num2str(k1_dof,"%.2f"), ' (dof)' ]); hold on;
+%  k1_dof = 2.7; k2_dof = k1_dof; y_Fpdf = fpdf(x,k1_dof,k2_dof);
+%  plot(x,y_Fpdf, 'linewidth',2, 'displayname',['F, k_1=k_2=',num2str(k1_dof,"%.2f"),' (dof)' ]); 
+% k1_dof = 5; k2_dof = k1_dof; y_Fpdf = fpdf(x,k1_dof,k2_dof);
+% plot(x,y_Fpdf, 'linewidth',2, 'displayname',['F, k_1=k_2=',num2str(k1_dof,"%.2f"),' (dof)' ]); 
+ k1_dof = 10; k2_dof = k1_dof; y_Fpdf = fpdf(x,k1_dof,k2_dof);
+ plot(x,y_Fpdf, 'linewidth',2, 'displayname',['F, k_1=k_2=',num2str(k1_dof,"%.2f"),' (dof)' ]); 
+k1_dof = 15; k2_dof = k1_dof; y_Fpdf = fpdf(x,k1_dof,k2_dof);
+plot(x,y_Fpdf, 'linewidth',2, 'displayname',['F, k_1=k_2=',num2str(k1_dof,"%.2f"),' (dof)' ]); 
+grid on;
+title("Probability distributions (PDFs)");
+xlabel('x'); ylabel('P(x)');
+legend('show');
+xlim([-.1 max(x)]);
+ylim([0 .9]);
 
 %% slide "Correlation"
 x1 = temperature; %[degree Celsius]
@@ -242,7 +282,7 @@ ylim([33 39]);
 f=figure;
 set(f,'position',[609 342 439 420])
 nbins = 6; %choose
-hist(x2,nbins);
+hist(x2,nbins) ;
 xlim([34 39]);
 set(gca,'xdir','reverse'); %alternatively use GUI: right click on the axes of the figure> Open Property Inspector > Rulers > XDir > reverse
 xlabel('Temperature [^oC]')
