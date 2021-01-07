@@ -165,7 +165,7 @@ ylim([0 .42]);
 
 
 %% slide "\chi^2 distribution"
-x = linspace(-5,5,1e3); %choose
+x = linspace(-5,5,1e2); %choose
 
 mu = 0; %mean
 sigma = 1;
@@ -191,17 +191,15 @@ axis([min(x) max(x) 0 .45]);
 
 %%%% study parameter variation: k (dof)
 figure;
-k_dof = 2.1; y_chiSqpdf = chi2pdf(x,k_dof);
-plot(x,y_chiSqpdf, 'linewidth',2, 'displayname',['\chi^2, k=',num2str(k_dof,"%.2f"),' (dof)']); hold on;
-%  k_dof = 2.3; y_chiSqpdf = chi2pdf(x,k_dof);
-%  plot(x,y_chiSqpdf, 'linewidth',2, 'displayname',['\chi^2, k=',num2str(k_dof,"%.2f"),' (dof)']); hold on;
-% k_dof = 2.7; y_chiSqpdf = chi2pdf(x,k_dof);
-% plot(x,y_chiSqpdf, 'linewidth',2, 'displayname',['\chi^2, k=',num2str(k_dof,"%.2f"),' (dof)']); hold on;
-title("Probability distributions (PDFs)");
+
+k_dof = 2.70; y_chiSqpdf = chi2pdf(x,k_dof);
+plot(x,y_chiSqpdf, 'linewidth',2, 'displayname',['\chi^2(k), k=',num2str(k_dof,"%.2f"),' (dof)']); hold on;
+title("Probability Distribution");
 grid on;
 xlabel('x'); ylabel('P(x)');
-legend('show');
+legend('show', 'location','northwest');
 axis([min(x) max(x) 0 .45]);
+
 
 %% F distribution
 x = linspace(1e-7,5,1e3); %choose
